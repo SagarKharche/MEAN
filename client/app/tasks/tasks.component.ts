@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
 
 import { TaskService } from '../service/task.service'
 
 import { Task } from '../models/Task';
+
 
 @Component({
   selector: 'tasks',
@@ -12,12 +14,15 @@ import { Task } from '../models/Task';
 export class TasksComponent implements OnInit {
   public tasks: Task[];
   public title: string;
+  public name: string;
+  public parentSubject: Subject<any> = new Subject();
   constructor(private taskService: TaskService) { }
 
   ngOnInit() { 
     this.taskService.getAllTasks().subscribe((respose) => {
       this.tasks = respose;
     });
+    this.name = 'Parent';
   }
 
   public addTask(): void {
@@ -42,5 +47,13 @@ export class TasksComponent implements OnInit {
     this.taskService.updateTask(task).subscribe((respose: any) => {
       console.log(respose);
     });
+  }
+
+  public getMessageFromChild(data: any): void {
+    console.log(data);
+  }
+
+  public notifyChild(): void {
+    this.parentSubject.next({message: 'Hello'});
   }
 }

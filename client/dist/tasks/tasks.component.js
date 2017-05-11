@@ -9,16 +9,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
+var Subject_1 = require("rxjs/Subject");
 var task_service_1 = require("../service/task.service");
 var TasksComponent = (function () {
     function TasksComponent(taskService) {
         this.taskService = taskService;
+        this.parentSubject = new Subject_1.Subject();
     }
     TasksComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.taskService.getAllTasks().subscribe(function (respose) {
             _this.tasks = respose;
         });
+        this.name = 'Parent';
     };
     TasksComponent.prototype.addTask = function () {
         var _this = this;
@@ -41,6 +44,12 @@ var TasksComponent = (function () {
         this.taskService.updateTask(task).subscribe(function (respose) {
             console.log(respose);
         });
+    };
+    TasksComponent.prototype.getMessageFromChild = function (data) {
+        console.log(data);
+    };
+    TasksComponent.prototype.notifyChild = function () {
+        this.parentSubject.next({ message: 'Hello' });
     };
     return TasksComponent;
 }());
